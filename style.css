@@ -1,0 +1,48 @@
+header {
+text-align: center;
+background-color: #808080;
+color: white;
+height: 60px;
+}
+
+.search-bar {
+margin: 20px; 
+padding: 20px;
+}
+
+.search-history {
+background-color: white;
+text-align: left;
+border: 1px solid gray;
+padding: 10px;
+margin-top: 20px;
+}
+
+.current-conditions {
+margin-top: 20px;
+padding: 20px;
+}
+
+.current-city, .date {
+font-size: 32px; 
+font-weight: bolder;
+}
+
+.current-weather {
+font-size: 20px;
+padding: 15px;
+}
+
+.forecasted-conditions {
+margin-top: 20px;
+margin-left: 10px; 
+border-radius: 10px;
+padding: 20px;
+background-color: #5D8AA8;
+color: white;
+text-align: center;
+}
+
+#forecast-header {
+margin-top: 20px;
+}
