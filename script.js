@@ -9,31 +9,9 @@ searchHistory();
 var savedCities = [];
 console.log(savedCities)
 
-// when the user clicks the search button
-$(".search-button").on("click", function(event){
-    event.preventDefault();
-// store the value of the user's input in the variable "city" and push the value into the array
-    var city = $("#city").val();
-    savedCities.push(city);
-// saving each city the user searches for in a button
-    var searchHistory = $("<div>"); 
-    searchHistory.addClass("searched-city search-history")
-    searchHistory.attr("data-city", city)
-    searchHistory.text(city); 
-    $(".search-history").after(searchHistory);
-  // store the url for the api in the variable "url"
-    var url = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&units=imperial&appid=b1ae1cca243a43807d3e1c2bc792b425";
-  // using the ajax get method to "get" data from the api
-  $.ajax({
-    url: url,
-    method: "GET"
-  })
-  // once the ajax function is finished, then do this function
-  .then(function(response){
-  // console.log the response so I can view the object that is returned from the api
-    console.log(response)
-  // storing data from the api in variables that will contain the text from the response
-    var currentCity = $(".current-city"); 
+// creating a function that will have the information from the api displayed on the page
+function displayWeather(response){
+  var currentCity = $(".current-city"); 
     currentCity.text(response.city.name);
     var date = $(".date");
     // splitting the string so that the date and time are separate
@@ -54,6 +32,18 @@ $(".search-button").on("click", function(event){
     var currentWind = $(".current-wind"); 
     currentWind.text("The Current Wind Speed Is: " +response.list[0].wind.speed + " MPH"); 
   // Need to get the current UV index
+    var lat = response.city.coord.lat;
+    var lon = response.city.coord.lon;
+    var UVURL = "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + lat + "&lon=" + lon + "&appid=b1ae1cca243a43807d3e1c2bc792b425&cnt=1";
+    $.ajax({
+      url: UVURL,
+      method: "GET"
+    })
+        .then(function(response){
+          console.log(response)
+            var UVIndex = $(".current-UV"); 
+            UVIndex.text("UV Index: " + response[0].value);
+        });
     
 // creating a header that will display forecasted conditions
     $("#forecast-header").text("Forecasted Conditions");
@@ -91,8 +81,36 @@ $(".search-button").on("click", function(event){
       $(".5-day-forecast").append(forecastDiv)
     }
   }
-  // setting the city to local storage
-  localStorage.setItem("searchHistory", JSON.stringify(savedCities));
+  }
+
+// when the user clicks the search button
+$(".search-button").on("click", function(event){
+    event.preventDefault();
+    // on click - clears the last searched city's forecast
+    $(".5-day-forecast").empty();
+// store the value of the user's input in the variable "city" and push the value into the array
+    var city = $("#city").val();
+    savedCities.push(city);
+// saving each city the user searches for in a button
+    var searchHistory = $("<button>"); 
+    searchHistory.addClass("searched-city search-history")
+    searchHistory.attr("data-city", city)
+    searchHistory.text(city); 
+    $(".search-history").after(searchHistory);
+  // store the url for the api in the variable "url"
+    var url = "https://api.openweathermap.org/data/2.5/forecast?q="+ city +"&units=imperial&appid=b1ae1cca243a43807d3e1c2bc792b425";
+  // using the ajax get method to "get" data from the api
+  $.ajax({
+    url: url,
+    method: "GET"
+  })
+  // once the ajax function is finished, then do this function
+  .then(function(response){
+    // console.log the response so I can view the object that is returned from the api
+      console.log(response);
+      displayWeather(response);
+    // setting the city to local storage
+    localStorage.setItem("searchHistory", JSON.stringify(savedCities)); 
   })
   })
 
@@ -105,6 +123,10 @@ $(".searched-city").on("click", function(event){
   $.ajax({
     url: url,
     method: "GET"
+  })
+
+  .then(function(response){
+    displayWeather(response);
   })
  
 })
