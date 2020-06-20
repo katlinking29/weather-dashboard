@@ -1,7 +1,9 @@
 // When the page loads, display what was stored in local storage
 function searchHistory(){
+  var searchHistoryE1 = $("<div>")
   savedCities = JSON.parse(localStorage.getItem("searchHistory"));
-  $(".search-history").text(savedCities);
+  searchHistoryE1.text(savedCities);
+  $(".searched-cities").append(searchHistoryE1)
 }
 searchHistory();
 
@@ -71,7 +73,7 @@ function displayWeather(response){
       forecastTemp.text(response.list[i].main.temp + "°F"); 
     // Creating a p element that will display the forecasted humidity based on the index in the array
       var forecastHumidity = $("<p>");
-      forecastHumidity.text(response.list[i].main.humidity + "%");
+      forecastHumidity.text("Humidity: " + response.list[i].main.humidity + "%");
     // appending the forecasted data to the forecast div
       forecastDiv.append(forecastDate);
       forecastDiv.append(imgE1);
@@ -88,6 +90,7 @@ $(".search-button").on("click", function(event){
     event.preventDefault();
     // on click - clears the last searched city's forecast
     $(".5-day-forecast").empty();
+    $(".forecasted-conditions").empty();
 // store the value of the user's input in the variable "city" and push the value into the array
     var city = $("#city").val();
     savedCities.push(city);
